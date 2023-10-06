@@ -1,16 +1,23 @@
-import React from 'react'
-import { useRecoilValue } from 'recoil'
+import React, { useEffect } from 'react'
+import { useRecoilState } from 'recoil'
 import transactionListState from '../recoil/atoms/atoms'
 import Transaction from './Transaction';
 
 const TransactionList = () => {
-    const transactionListItems = useRecoilValue(transactionListState);
+    const [transactionList, setTransactionList] = useRecoilState(transactionListState);
+    useEffect(() => {
+        setTransactionList(JSON.parse(localStorage.getItem("TRANSACTION_LIST")))
+      }, [setTransactionList])
+
+// console.log(transactionList[0])
+
   return (
     <div>
-        <h3>Transactio History</h3>
+        <h3 className='text-2xl'>Transactio History</h3>
         <ul className='list'>
-            {transactionListItems.map((transaction)=><Transaction 
-                key={transaction._id}
+            {transactionList !== null &&
+                transactionList?.map((transaction, index)=><Transaction
+                key={index}
                 transaction={transaction}
             >
             </Transaction>)}

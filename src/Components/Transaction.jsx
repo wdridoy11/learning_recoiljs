@@ -1,13 +1,30 @@
 import React from 'react'
+import { useRecoilState } from 'recoil'
+import transactionListState from '../recoil/atoms/atoms'
+import { removeItemAtIndex } from '../utils/utils';
 
-const Transaction = ({transaction }) => {
+const Transaction = ({transaction}) => {
+    console.log(transaction?.amount)
+    const [transactionList,setTransactionList] = useRecoilState(transactionListState);
+    const index = transactionList.findIndex(listItem=> listItem === transaction);
+
+    const removeTransaction=()=>{
+        const newList = removeItemAtIndex(transactionList,index)
+        setTransactionList(newList)
+    }
+    const sign = transaction?.amount < 0 ? "-" : "+"
+
+
     return (
-        <div>
-            <li>{transaction.amount}</li>
-            <li>{transaction.text}</li>
-            <span>{transaction.amount}</span>
-            <button className='delete-btn'>X</button>
-        </div>
+        <li className={transaction?.amount < 0 ? "minus" : "plus"}>
+            {transaction?.text}
+            <span>
+              {sign}${Math.abs(transaction?.amount)}
+            </span>
+            <button className="delete-btn" onClick={removeTransaction}>
+              x
+            </button>
+        </li>
       )
 }
 
